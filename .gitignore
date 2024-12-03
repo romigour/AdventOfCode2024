@@ -2,3 +2,5 @@ target/
 debug/
 Cargo.lock
 .idea/
+**/input.txt
+**/sample.txt
