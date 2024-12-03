@@ -1,95 +1,44 @@
 use std::fs::read_to_string;
-
+use regex::Regex;
 fn main() {
-    let lignes = read_file("day03/input/input.txt");
+    let text = read_file("day03/input/input.txt").join("");
 
-    let mut list_report: Vec<Vec<i32>> = Vec::new();
-
-    for ligne in lignes {
-        let ligne_array: Vec<i32> = ligne.split(" ").flat_map(|s| s.parse().ok()).collect();
-        list_report.push(ligne_array);
-    }
-
-    // println!("len {:?}", list_report);
-
-    println!("Part 1: {:?}", part_one(&list_report));
-    // println!("Part 2: {:?}", part_two(&list_report));
+    println!("Part 1: {:?}", part_one(&text));
+    println!("Part 2: {:?}", part_two(&text));
 }
 
-fn part_two(list_report: &Vec<Vec<i32>>) -> i32 {
-    0
+fn part_two(text: &String) -> i32 {
+    let regex_1 = Regex::new(r"mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)").unwrap();
+    let regex_2 = Regex::new(r"\d{1,3}").unwrap();
+
+    let mut accept_calcul = true;
+    let somme: i32 = regex_1.find_iter(&text).map(|s| {
+        let string = String::from(s.as_str());
+        if string.starts_with("mul") {
+            if (accept_calcul) {
+                let nombres: Vec<i32> = regex_2.find_iter(s.as_str()).map(|nb| nb.as_str().parse::<i32>().unwrap()).collect();
+                return nombres[0].to_string().parse::<i32>().unwrap() * nombres[1].to_string().parse::<i32>().unwrap()
+            }
+        } else if string.eq("do()") {
+            accept_calcul = true;
+        } else if string.eq("don't()") {
+            accept_calcul = false;
+        }
+        0
+    }).sum();
+
+    somme
 }
 
-fn part_one(list_report: &Vec<Vec<i32>>) -> i32 {
-   0
-}
+fn part_one(text: &String) -> i32 {
+    let regex_1 = Regex::new(r"mul\(\d{1,3},\d{1,3}\)").unwrap();
+    let regex_2 = Regex::new(r"\d{1,3}").unwrap();
 
-fn is_good_report_with_one_error(report: &Vec<i32>) -> bool {
-    let mut is_good = true;
-
-    for idx in 0..report.len() - 1 {
-        if !(report[idx] < report[idx + 1] && report[idx + 1] - report[idx] < 4) {
-            let mut report_without_error_1 = report.clone();
-            let mut report_without_error_2 = report.clone();
-            report_without_error_1.remove(idx);
-            report_without_error_2.remove(idx + 1);
-            is_good = is_good_report(&report_without_error_1) || is_good_report(&report_without_error_2);
-            break;
-        }
-    }
-
-    if is_good {
-        return is_good
-    }
-
-    is_good = true;
-
-    for idx in 0..report.len() - 1 {
-        if !(report[idx] > report[idx + 1] && report[idx] - report[idx + 1] < 4) {
-            let mut report_without_error_1 = report.clone();
-            let mut report_without_error_2 = report.clone();
-            report_without_error_1.remove(idx);
-            report_without_error_2.remove(idx + 1);
-            is_good = is_good_report(&report_without_error_1) || is_good_report(&report_without_error_2);
-            break;
-        }
-    }
-
-    if is_good {
-        return is_good
-    }
-
-    false
-}
-
-fn is_good_report(report: &Vec<i32>) -> bool {
-    let mut is_good = true;
-
-    for idx in 0..report.len() - 1 {
-        if !(report[idx] < report[idx + 1] && report[idx + 1] - report[idx] < 4) {
-            is_good = false;
-            break;
-        }
-    }
-
-    if is_good {
-        return is_good
-    }
-
-    is_good = true;
-
-    for idx in 0..report.len() - 1 {
-        if !(report[idx] > report[idx + 1] && report[idx] - report[idx + 1] < 4) {
-            is_good = false;
-            break;
-        }
-    }
-
-    if is_good {
-        return is_good
-    }
-
-    false
+    let somme: i32 = regex_1.find_iter(&text).map(|s| {
+        let nombres:Vec<i32> = regex_2.find_iter(s.as_str()).map(|nb| nb.as_str().parse::<i32>().unwrap()).collect();
+        nombres[0].to_string().parse::<i32>().unwrap() * nombres[1].to_string().parse::<i32>().unwrap()
+    }).sum();
+    somme
 }
 
 fn read_file(filename: &str) -> Vec<String> {
