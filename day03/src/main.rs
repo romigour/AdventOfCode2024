@@ -15,7 +15,7 @@ fn part_two(text: &String) -> i32 {
     let somme: i32 = regex_1.find_iter(&text).map(|s| {
         let string = String::from(s.as_str());
         if string.starts_with("mul") {
-            if (accept_calcul) {
+            if accept_calcul {
                 let nombres: Vec<i32> = regex_2.find_iter(s.as_str()).map(|nb| nb.as_str().parse::<i32>().unwrap()).collect();
                 return nombres[0].to_string().parse::<i32>().unwrap() * nombres[1].to_string().parse::<i32>().unwrap()
             }
