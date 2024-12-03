@@ -13,27 +13,15 @@ fn main() {
     // println!("len {:?}", list_report);
 
     println!("Part 1: {:?}", part_one(&list_report));
-    println!("Part 2: {:?}", part_two(&list_report));
+    // println!("Part 2: {:?}", part_two(&list_report));
 }
 
 fn part_two(list_report: &Vec<Vec<i32>>) -> i32 {
-    let mut nb_good_report = 0;
-    for num_report in 0..list_report.len() {
-        if is_good_report_with_one_error(&list_report[num_report]) {
-            nb_good_report += 1;
-        }
-    }
-    nb_good_report
+    0
 }
 
 fn part_one(list_report: &Vec<Vec<i32>>) -> i32 {
-    let mut nb_good_report = 0;
-    for num_report in 0..list_report.len() {
-        if is_good_report(&list_report[num_report]) {
-            nb_good_report += 1;
-        }
-    }
-    nb_good_report
+   0
 }
 
 fn is_good_report_with_one_error(report: &Vec<i32>) -> bool {
